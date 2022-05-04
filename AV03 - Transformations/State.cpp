@@ -88,7 +88,7 @@ void State::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
 		//ptrState->Shapes[0].translate(0.1f, 0.0f);
-		ptrState->Shapes[0].scale(0.5f, 0.5f);
+		ptrState->Shapes[0].reflection(true);
 
 		std::cout << "Translation" << std::endl;
 	}

@@ -13,6 +13,7 @@ class Shape {
 private:
 	std::vector<float> verticies;
 	glm::mat4 transformationMatrix = glm::mat4(1.0f);
+	float centerX = 0, centerY = 0;
 
 	GLenum type;
 public:
@@ -24,11 +25,13 @@ public:
 	// Set Functions
 	void addVerticies(float x, float y, float z, float r, float g, float b);
 	void setVerticie(int index, float value);
+	void calcCenter();
 
 	void setMatrix(glm::mat4 matrix);
 	void translate(float x, float y);
 	void rotate(float angle);
 	void scale(float xScale, float yScale);
+	void reflection(bool xAxis);
 
 	void setType(GLenum type);
 	void clearData();

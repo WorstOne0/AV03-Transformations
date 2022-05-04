@@ -1,10 +1,2 @@
-﻿  State.cpp
-C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(166,12): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(167,12): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(191,37): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(190,37): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(295,47): warning C4267: 'argumento': conversão de 'size_t' para 'GLsizei', possível perda de dados
-C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(313,87): warning C4267: 'argumento': conversão de 'size_t' para 'GLsizei', possível perda de dados
-x64\Debug\Shape.obj : warning LNK4042: objeto especificado mais de uma vez; extras ignorados
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflita com uso de outras bibliotecas; use /NODEFAULTLIB:library
+﻿  Shape.cpp
   AV03 - Transformations.vcxproj -> C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\x64\Debug\AV03 - Transformations.exe
