@@ -1,2 +1,8 @@
-﻿  Shape.cpp
+﻿  State.cpp
+C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(268,12): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(269,12): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(293,37): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(292,37): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(397,47): warning C4267: 'argumento': conversão de 'size_t' para 'GLsizei', possível perda de dados
+C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\State.cpp(415,87): warning C4267: 'argumento': conversão de 'size_t' para 'GLsizei', possível perda de dados
   AV03 - Transformations.vcxproj -> C:\Users\lucca\Desktop\Faculdade\2022-1\Computação Grafica\Transformaçoes\AV03 - Transformations\x64\Debug\AV03 - Transformations.exe

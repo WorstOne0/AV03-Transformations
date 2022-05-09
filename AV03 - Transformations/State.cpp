@@ -74,24 +74,44 @@ void State::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 			ptrState->isConsole = true;
 
 			std::cout << "A tela esta travada enquanto o modo de digitacao pelo console esta ativo, selecione o console" << std::endl;
+
+			std::cout << "Digite a operação\n1 - Novo objeto\n2 - Translacao\n3 - Rotacao\n4 - Escala\n5 - Reflexao\nDigite qualquer outra coisa para sair\n" << std::endl;
+			std::cin >> ptrState->consoleOptions;
 		}
 	}
 
-	// Toggle the points
-	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
-		std::string frase = ptrState->drawPoints ? "desativados" : "ativados";
-
-		// Swap
-		ptrState->drawPoints = !ptrState->drawPoints;
-		std::cout << "Os pontos foram " << frase << std::endl;
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		ptrState->Shapes[0].translate(-0.05f, 0.0f);
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
-		//ptrState->Shapes[0].translate(0.1f, 0.0f);
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		ptrState->Shapes[0].translate(0.05f, 0.0f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		ptrState->Shapes[0].translate(0.0f, 0.05f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		ptrState->Shapes[0].translate(0.0f, -0.05f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+		ptrState->Shapes[0].rotate(22.5f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		ptrState->Shapes[0].scale(1.1f, 1.1f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+		ptrState->Shapes[0].scale(0.9f, 0.9f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
 		ptrState->Shapes[0].reflection(true);
-
-		std::cout << "Translation" << std::endl;
 	}
+
 
 	// Submits the points
 	if (!ptrState->isConsole) {
@@ -108,6 +128,36 @@ void State::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 void State::getFromConsole() {
+	int index;
+	std::cout << "Digite o qual objeto quer modificar. Existem " << this->Shapes.size() << " obejtos" << std::endl;
+	std::cin >> index;
+
+	switch (this->consoleOptions) {
+	case 1:
+		this->newObjectFromConsole();
+		break;
+	case 2:
+		this->tranlationFromConsole(index);
+		break;
+	case 3:
+		this->rotateFromConsole(index);
+		break;
+	case 4:
+		this->scaleFromConsole(index);
+		break;
+	case 5:
+		this->reflectionFromConsole(index);
+		break;
+
+	default:
+		break;
+	}
+
+	this->isConsole = false;
+	std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
+}
+
+void State::newObjectFromConsole() {
 	std::string a;
 	std::cout << "Digite o " << (this->newShape.getVerticies().size() / 6) + 1 << " verticie" << std::endl;
 
@@ -144,9 +194,61 @@ void State::getFromConsole() {
 		this->isConsole = false;
 
 		// **** Add To The VAO ****
+		this->addShapeToVAO(GL_TRIANGLE_FAN);
 
 		std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
 	}
+}
+
+void State::tranlationFromConsole(int index) {
+	float x, y;
+	std::cout << "Digite o quanto quer transladar em X e Y" << std::endl;
+
+	std::cout << "X: ";
+	std::cin >> x;
+
+	std::cout << "Y: ";
+	std::cin >> y;
+
+	// NDC
+	if ((x > 1.0f || y > 1.0f) || (x < -1.0f || y < -1.0f)) {
+		std::cout << "O Ponto adiconado em (" << x << ", " << y << ") e invalido e sera descartado" << std::endl;
+		
+		this->isConsole = false;
+		std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
+	}
+
+	this->Shapes[index - 1].translate(x, y);
+}
+
+void State::rotateFromConsole(int index) {
+	float angle;
+	std::cout << "Digite o angulo de rotacao" << std::endl;
+
+	std::cout << "Angulo: ";
+	std::cin >> angle;
+
+	this->Shapes[index - 1].rotate(angle);
+}
+
+void State::scaleFromConsole(int index) {
+	float scale;
+	std::cout << "Digite a escala" << std::endl;
+
+	std::cout << "Escala: ";
+	std::cin >> scale;
+
+	this->Shapes[index - 1].scale(scale, scale);
+}
+
+void State::reflectionFromConsole(int index) {
+	std::string axis;
+	std::cout << "Digite o eixo de reflexao" << std::endl;
+
+	std::cout << "Eixo: ";
+	std::cin >> axis;
+
+	axis == "x" || axis == "X" ? this->Shapes[index - 1].reflection(true) : this->Shapes[index - 1].reflection(false);
 }
 
 void State::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {

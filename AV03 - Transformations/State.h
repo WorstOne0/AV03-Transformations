@@ -18,7 +18,8 @@ private:
 	// The shape that is being built
 	Shape newShape;
 public:
-	bool drawPoints = true, isMouse = true, isConsole = false;
+	bool isMouse = true, isConsole = false;
+	int consoleOptions;
 
 	std::vector<float> colors = {
 		//0.0f, 0.0f, 0.0f, // Black
@@ -44,6 +45,11 @@ public:
 
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	void getFromConsole();
+	void newObjectFromConsole();
+	void tranlationFromConsole(int index);
+	void rotateFromConsole(int index);
+	void scaleFromConsole(int index);
+	void reflectionFromConsole(int index);
 
 	static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
