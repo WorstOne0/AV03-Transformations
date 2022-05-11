@@ -32,6 +32,7 @@ public:
 	void rotate(float angle);
 	void scale(float xScale, float yScale);
 	void reflection(bool xAxis);
+	void shear(float angle);
 
 	void setType(GLenum type);
 	void clearData();

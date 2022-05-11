@@ -18,8 +18,8 @@ private:
 	// The shape that is being built
 	Shape newShape;
 public:
-	bool isMouse = true, isConsole = false;
-	int consoleOptions;
+	bool isMouse = true, isConsole = false, isRadius = false;
+	int consoleOptions, selectedShape = 0, numLados = 3;
 
 	std::vector<float> colors = {
 		//0.0f, 0.0f, 0.0f, // Black

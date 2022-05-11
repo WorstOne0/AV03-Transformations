@@ -81,37 +81,76 @@ void State::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		ptrState->Shapes[0].translate(-0.05f, 0.0f);
+		ptrState->Shapes[ptrState->selectedShape].translate(-0.05f, 0.0f);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		ptrState->Shapes[0].translate(0.05f, 0.0f);
+		ptrState->Shapes[ptrState->selectedShape].translate(0.05f, 0.0f);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		ptrState->Shapes[0].translate(0.0f, 0.05f);
+		ptrState->Shapes[ptrState->selectedShape].translate(0.0f, 0.05f);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		ptrState->Shapes[0].translate(0.0f, -0.05f);
+		ptrState->Shapes[ptrState->selectedShape].translate(0.0f, -0.05f);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-		ptrState->Shapes[0].rotate(22.5f);
+		ptrState->Shapes[ptrState->selectedShape].rotate(22.5f);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		ptrState->Shapes[0].scale(1.1f, 1.1f);
+		ptrState->Shapes[ptrState->selectedShape].scale(1.1f, 1.1f);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-		ptrState->Shapes[0].scale(0.9f, 0.9f);
+		ptrState->Shapes[ptrState->selectedShape].scale(0.9f, 0.9f);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
-		ptrState->Shapes[0].reflection(true);
+		ptrState->Shapes[ptrState->selectedShape].reflection(false);
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
+		ptrState->Shapes[ptrState->selectedShape].shear(20.0f);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+		ptrState->isRadius = !ptrState->isRadius;
+
+		std::cout << "Trocado para modo com radio e num de lados" << std::endl;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
+		ptrState->numLados++;
+		std::cout << ptrState->numLados << std::endl;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
+		ptrState->numLados--;
+		std::cout << ptrState->numLados << std::endl;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		ptrState->selectedShape = 0;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		ptrState->selectedShape = 1;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+		ptrState->selectedShape = 2;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+		ptrState->selectedShape = 3;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+		ptrState->selectedShape = 4;
+	}
 
 	// Submits the points
 	if (!ptrState->isConsole) {
@@ -128,14 +167,50 @@ void State::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 }
 
 void State::getFromConsole() {
+	if (this->consoleOptions == 1) {
+		int choice;
+		std::cout << "1 - Adicionar com todos os pontos\n2 - Adicionar com raio e num de lados" << std::endl;
+		std::cin >> choice;
+		
+		if (choice == 1) {
+			this->newObjectFromConsole();
+
+			this->addShapeToVAO(GL_TRIANGLE_FAN);
+
+			this->isConsole = false;
+			std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
+			return;
+		} else if (choice == 2) {
+			int sides;
+			float radius, x, y;
+
+			std::cout << "Digite o raio\n";
+			std::cin >> radius;
+			std::cout << "Digite o numero de lados\n";
+			std::cin >> sides;
+			std::cout << "Digite o centro do objeto\nX: ";
+			std::cin >> x;
+			std::cout << "Y: ";
+			std::cin >> y;
+
+			this->addVerticieToShape(x, y, 0.0f, this->colors[(3 * this->Shapes.size())], this->colors[(3 * this->Shapes.size()) + 1], this->colors[(3 * this->Shapes.size()) + 2]);
+
+			this->createRegularPolygon(sides, radius);
+			this->addShapeToVAO(GL_TRIANGLE_FAN);
+
+			this->isConsole = false;
+			std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
+			return;
+		} else {
+			std::cout << "Nenhuma opcao\n";
+		}
+	}
+
 	int index;
 	std::cout << "Digite o qual objeto quer modificar. Existem " << this->Shapes.size() << " obejtos" << std::endl;
 	std::cin >> index;
 
 	switch (this->consoleOptions) {
-	case 1:
-		this->newObjectFromConsole();
-		break;
 	case 2:
 		this->tranlationFromConsole(index);
 		break;
@@ -157,46 +232,63 @@ void State::getFromConsole() {
 	std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
 }
 
+void State::createRegularPolygon(int numOfSides, float radius) {
+	int numOfVerticies = numOfSides + 2;
+
+	for (int i = 1; i < numOfVerticies; i++) {
+		this->addVerticieToShape(
+			this->newShape.getVerticies()[0] + (radius * cos(i * 2.0f * 3.141592 / numOfSides)),
+			this->newShape.getVerticies()[1] + (radius * sin(i * 2.0f * 3.141592 / numOfSides)),
+			0.0f,
+			this->colors[(3 * this->Shapes.size())],
+			this->colors[(3 * this->Shapes.size()) + 1],
+			this->colors[(3 * this->Shapes.size()) + 2]);
+	}
+}
+
 void State::newObjectFromConsole() {
 	std::string a;
-	std::cout << "Digite o " << (this->newShape.getVerticies().size() / 6) + 1 << " verticie" << std::endl;
+	
+	while (a != "q") {
+		std::cout << "Digite o " << (this->newShape.getVerticies().size() / 6) + 1 << " verticie" << std::endl;
 
-	std::cout << "X: ";
-	std::cin >> a;
-	float x = std::stof(a);
+		std::cout << "X: ";
+		std::cin >> a;
+		float x = std::stof(a);
 
-	std::cout << "Y: ";
-	std::cin >> a;
-	float y = std::stof(a);
+		std::cout << "Y: ";
+		std::cin >> a;
+		float y = std::stof(a);
 
-	// NDC
-	if ((x > 1.0f || y > 1.0f) || (x < -1.0f || y < -1.0f)) {
-		std::cout << "O Ponto adiconado em (" << x << ", " << y << ") e invalido e sera descartado" << std::endl;
-		return;
-	}
-
-	// No repeated points for the same curve
-	for (int i = 0; i < this->newShape.getVerticies().size() / 6; i++) {
-		if (this->newShape.getVerticies()[(6 * i)] == x && this->newShape.getVerticies()[(6 * i) + 1] == y) {
-			std::cout << "O Ponto adiconado em (" << x << ", " << y << ") e repetido e sera descartado" << std::endl;
+		// NDC
+		if ((x > 1.0f || y > 1.0f) || (x < -1.0f || y < -1.0f)) {
+			std::cout << "O Ponto adiconado em (" << x << ", " << y << ") e invalido e sera descartado" << std::endl;
 			return;
 		}
-	}
 
-	// Add the verticies with a color to the shape
-	this->addVerticieToShape(x, y, 0.0f, this->colors[(3 * this->Shapes.size())], this->colors[(3 * this->Shapes.size()) + 1], this->colors[(3 * this->Shapes.size()) + 2]);
+		// No repeated points for the same curve
+		for (int i = 0; i < this->newShape.getVerticies().size() / 6; i++) {
+			if (this->newShape.getVerticies()[(6 * i)] == x && this->newShape.getVerticies()[(6 * i) + 1] == y) {
+				std::cout << "O Ponto adiconado em (" << x << ", " << y << ") e repetido e sera descartado" << std::endl;
+				return;
+			}
+		}
 
-	std::cout << "Digite no console 'q' para sair. Digite 'i' pra continuar" << std::endl;
-	std::cin >> a;
+		// Add the verticies with a color to the shape
+		this->addVerticieToShape(x, y, 0.0f, this->colors[(3 * this->Shapes.size())], this->colors[(3 * this->Shapes.size()) + 1], this->colors[(3 * this->Shapes.size()) + 2]);
 
-	// Max 9 points or user finished inserting
-	if (a == "q" || (this->newShape.getVerticies().size() / 6) >= 9) {
-		this->isConsole = false;
+		std::cout << "Digite no console 'q' para sair. Digite 'i' pra continuar" << std::endl;
+		std::cin >> a;
 
-		// **** Add To The VAO ****
-		this->addShapeToVAO(GL_TRIANGLE_FAN);
+		// Max 9 points or user finished inserting
+		if (a == "q" || (this->newShape.getVerticies().size() / 6) >= 9) {
+			this->isConsole = false;
 
-		std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
+			// **** Add To The VAO ****
+			this->addShapeToVAO(GL_TRIANGLE_FAN);
+
+			std::cout << "O modo de input pelo console terminou, selecione novamente a tela" << std::endl;
+		}
 	}
 }
 
@@ -280,21 +372,12 @@ void State::mouseButtonCallback(GLFWwindow* window, int button, int action, int 
 
 			// Add the verticies with a color to the shape
 			ptrState->addVerticieToShape(x, y, 0.0f, ptrState->colors[(3 * ptrState->Shapes.size())], ptrState->colors[(3 * ptrState->Shapes.size()) + 1], ptrState->colors[(3 * ptrState->Shapes.size()) + 2]);
+			
+			if (ptrState->isRadius) {
+				ptrState->createRegularPolygon(ptrState->numLados, 0.2);
+				ptrState->addShapeToVAO(GL_TRIANGLE_FAN);
+			}
 		}
-	}
-}
-
-void State::createRegularPolygon(int numOfSides, float radius) {
-	int numOfVerticies = numOfSides + 2;
-
-	for (int i = 1; i < numOfVerticies; i++) {
-		this->addVerticieToShape(
-			this->newShape.getVerticies()[0] + (radius * cos(i * 2.0f * 3.141592 / numOfSides)), 
-			this->newShape.getVerticies()[1] + (radius * sin(i * 2.0f * 3.141592 / numOfSides)),
-			0.0f, 
-			this->colors[(3 * this->Shapes.size())], 
-			this->colors[(3 * this->Shapes.size()) + 1], 
-			this->colors[(3 * this->Shapes.size()) + 2]);
 	}
 }
 	

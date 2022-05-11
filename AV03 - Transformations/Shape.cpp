@@ -73,6 +73,16 @@ void Shape::reflection(bool xAxis) {
 	xAxis ? this->transformationMatrix = glm::scale(this->transformationMatrix, glm::vec3(1, -1, 1)) : this->transformationMatrix = glm::scale(this->transformationMatrix, glm::vec3(-1, 1, 1));
 }
 
+void Shape::shear(float angle) {
+	this->transformationMatrix = glm::rotate(this->transformationMatrix, glm::radians(-angle / 2), glm::vec3(0.0, 0.0, 1.0));
+
+	this->transformationMatrix = glm::scale(this->transformationMatrix, glm::vec3(sin(angle / 2), cos(angle / 2), 0.5));
+
+	this->transformationMatrix = glm::rotate(this->transformationMatrix, glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
+
+	this->transformationMatrix = glm::scale(this->transformationMatrix, glm::vec3(sqrt(2) / sin(angle), sqrt(2) / cos(angle), 0.5));
+}
+
 void Shape::setType(GLenum type) {
 	this->type = type;
 
